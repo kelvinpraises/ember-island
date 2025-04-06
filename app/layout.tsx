@@ -18,12 +18,12 @@ const frame = {
   version: "next",
   imageUrl: `${appUrl}/images/frame-image.png`,
   button: {
-    title: "Play",
+    title: "Ember Island",
     action: {
       type: "launch_frame",
-      name: "Play",
+      name: "Dance with Fire",
       url: `${appUrl}`,
-      splashImageUrl: `${appUrl}/images/icon-for-farcaster.png`,
+      splashImageUrl: `${appUrl}/images/frame-image.png`,
       splashBackgroundColor: "#27213C",
     },
   },
