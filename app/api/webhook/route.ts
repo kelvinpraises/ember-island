@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
           await sendNotification(
             {
               title: "🌋 Welcome to Ember Island!",
-              body: "Your journey begins! Discover Stoke Fire by @nbragg and check out @kelvinpraises' work. Visit /stokefire to keep your village warm!",
+              body: "Your journey begins! Discover Stoke Fire by @nbragg. Visit /stokefire to keep your village warm!",
               tag: "welcomeEmberIsland",
             },
             event.notificationDetails
