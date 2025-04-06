@@ -1,7 +1,10 @@
 "use client";
 
-import "@/styles/globals.css";
+import FramesSDK from "@farcaster/frame-sdk";
 import localFont from "next/font/local";
+import React, { useLayoutEffect } from "react";
+
+import "@/styles/globals.css";
 
 const disposabledroid = localFont({
   src: [
@@ -24,15 +27,22 @@ export default function AppLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  useLayoutEffect(() => {
+    const load = async () => {
+      FramesSDK.actions.ready({
+        disableNativeGestures: true,
+      });
+    };
+    load();
+  }, []);
+
   return (
     <html
       suppressHydrationWarning
       lang="en"
       className={`antialiased ${disposabledroid.variable} flex justify-center`}
     >
-      <body>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
