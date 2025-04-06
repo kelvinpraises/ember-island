@@ -1,58 +1,62 @@
 import {
-    ParseWebhookEvent,
-    parseWebhookEvent,
-    verifyAppKeyWithNeynar,
+  ParseWebhookEvent,
+  parseWebhookEvent,
+  verifyAppKeyWithNeynar,
 } from "@farcaster/frame-node";
 import { NextRequest } from "next/server";
 
-type NotificationParams = {
-  title: string;
-  body: string;
-  tag: string;
-};
-
-type FarcasterNotificationResponse = {
-  success: boolean;
-  message?: string;
-};
-
-// Send notification to Farcaster with proper error handling
-async function sendNotification(
-  params: NotificationParams,
-  notificationDetails: { url: string; token: string }
-): Promise<void> {
-  try {
-    const { title, body, tag } = params;
-    const targetUrl = process.env.NEXT_PUBLIC_URL || "";
-
-    if (!notificationDetails.url || !notificationDetails.token || !targetUrl) {
-      console.error("Missing notification configuration");
-      return;
-    }
-
-    const notificationId = `${tag}-${Date.now()}`;
-
-    const response = (await fetch(notificationDetails.url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        notificationId,
-        title: title.substring(0, 32), // Farcaster limit: 32 chars
-        body: body.substring(0, 128), // Farcaster limit: 128 chars
-        targetUrl,
-        tokens: [notificationDetails.token],
-      }),
-    }).then((res) => res.json())) as FarcasterNotificationResponse;
-
-    if (!response.success) {
-      console.error("Failed to send notification:", response.message);
-    }
-  } catch (error) {
-    console.error("Error sending notification:", error);
-  }
-}
-
 export async function POST(request: NextRequest) {
+  type NotificationParams = {
+    title: string;
+    body: string;
+    tag: string;
+  };
+
+  type FarcasterNotificationResponse = {
+    success: boolean;
+    message?: string;
+  };
+
+  // Send notification to Farcaster with proper error handling
+  async function sendNotification(
+    params: NotificationParams,
+    notificationDetails: { url: string; token: string }
+  ): Promise<void> {
+    try {
+      const { title, body, tag } = params;
+      const targetUrl = process.env.NEXT_PUBLIC_URL || "";
+
+      if (
+        !notificationDetails.url ||
+        !notificationDetails.token ||
+        !targetUrl
+      ) {
+        console.error("Missing notification configuration");
+        return;
+      }
+
+      const notificationId = `${tag}-${Date.now()}`;
+
+      const response = (await fetch(notificationDetails.url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          notificationId,
+          title: title.substring(0, 32), // Farcaster limit: 32 chars
+          body: body.substring(0, 128), // Farcaster limit: 128 chars
+          targetUrl,
+          tokens: [notificationDetails.token],
+        }),
+      }).then((res) => res.json())) as FarcasterNotificationResponse;
+
+      if (!response.success) {
+        console.error("Failed to send notification:", response.message);
+      }
+    } catch (error) {
+      console.error("Error sending notification:", error);
+    }
+  }
+
   try {
     const appUrl = process.env.NEXT_PUBLIC_URL;
 
